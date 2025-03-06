@@ -28,14 +28,3 @@ public protocol InlineOperation: CodeConvertible {
 public protocol DeclConvertible: CodeConvertible {
     
 }
-
-// MARK: - MultiCodeConvertible
-public protocol SourceKind: CustomStringConvertible, CaseIterable, Sendable {
-}
-
-public protocol MultiCodeConvertible {
-    associatedtype Kind where Kind: SourceKind
-    var snippetGroupName: String { get }
-    func code(for kind: Kind) -> CodeConvertible?
-}
-
