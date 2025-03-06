@@ -43,8 +43,8 @@ extension CGPoint: SourceInitable {
 
 // Example usage
 let point = CGPoint(x: 10, y: 20)
-let initializer = point.source()
-print(initializer) // Outputs: CGPoint(x: 10, y: 20)
+let initializer = point.source().code(precision: 1)
+print(initializer) // Outputs: CGPoint(x: 10.0, y: 20.0)
 ```
 
 In this example, `CGPoint` implements `SourceInitable` to generate an `Initializer` object representing its initialization code. You can copy this output and use it directly in your Swift code.
