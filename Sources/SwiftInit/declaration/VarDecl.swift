@@ -19,8 +19,9 @@ public final class VarDecl: DeclConvertible {
     public var dependentVars: [VarDecl] = []
     public let operations: [InstanceOperation]
     
+    private var _varName: String?
     public var varName: String {
-        instance.varName
+        _varName ?? instance.varName
     }
     
     public init(_ instance: Initializer) {
@@ -56,6 +57,11 @@ public final class VarDecl: DeclConvertible {
         self.instance = .object(type, builder: parameters)
         self.operations = []
     }
+    
+    public func setVarName(_ name: String) -> Self {
+        self._varName = name
+        return self
+    }
 
     public func lazy() -> Self {
         self.style = .lazy
@@ -73,11 +79,11 @@ public final class VarDecl: DeclConvertible {
             return definitionCode(precision: precision)
         case .lazy:
             return """
-            lazy var \(instance.varName): \(instance.typeName) = \(closureDefinition(precision: precision))()
+            lazy var \(varName): \(instance.typeName) = \(closureDefinition(precision: precision))()
             """
         case .closure:
             return """
-            let \(instance.varName): \(instance.typeName) = \(closureDefinition(precision: precision))()
+            let \(varName): \(instance.typeName) = \(closureDefinition(precision: precision))()
             """
         }
     }
@@ -93,7 +99,7 @@ public final class VarDecl: DeclConvertible {
             return """
             {
                 \(definitionCode(precision: precision))
-                return \(instance.varName)
+                return \(varName)
             }
             """
         }
@@ -104,10 +110,10 @@ public final class VarDecl: DeclConvertible {
             v.code(precision: precision)
         }
         let def = operations.isEmpty ? "let" : "var"
-        let definition = "\(def) \(instance.varName) = \(instance.code(precision: precision))"
+        let definition = "\(def) \(varName) = \(instance.code(precision: precision))"
         
         let exps = operations.map { exp in
-            instance.varName + exp.code(precision: precision)
+            varName + exp.code(precision: precision)
         }
         return (depends + [definition] + exps).joined(separator: "\n")
     }
